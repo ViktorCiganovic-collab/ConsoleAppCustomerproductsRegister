@@ -1,0 +1,2 @@
+Furniture,BookShelf,1350
+Home,Armchair,9000
