@@ -12,16 +12,19 @@ namespace Vecka40MiniProjekt
     {
         List<Newitem> Productlist = new List<Newitem>();
         public string filepath = "logfile.txt";
-       
+
         public void Runsession()
-        {
+       {
+            
+
             while (true)
             {
                 // Here we ask the customer to input a category, a product and its price.
                 // As long as the customer continues to add products the loop continues 
                 Console.WriteLine("Enter a category of products - press q for Quit");
                 string? NewCategory = Console.ReadLine();
-                if (NewCategory == "q") { break; } if (NewCategory == "") { Runsession(); }
+                if (NewCategory == "q") { break; }
+                if (NewCategory == "") { Runsession(); }
 
                 Console.WriteLine("Enter a product - press q for Quit");
                 string? NewProduct = Console.ReadLine();
@@ -33,32 +36,46 @@ namespace Vecka40MiniProjekt
                 if (thePrice == "q") { break; }
                 if (thePrice == "") { Runsession(); }
 
+                
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("The product was added to the productlist");
-                    Console.ResetColor();
-                    Console.WriteLine("------------------------------");
-               
+                    
+                    
                     Newitem A_new_item = new Newitem();
                     // We create a new object instance of the Newitem class and add the object (product) to the Productlist                    
                     A_new_item.Category = NewCategory;
                     A_new_item.Name = NewProduct;
                     A_new_item.Price = Int32.Parse(thePrice);
-                    Productlist.Add(A_new_item);
-                    // We open the tap and a logfile is created were we log all the userinput on three columns for each line:
-                    StreamWriter writer = new StreamWriter(filepath, true);
-                    writer.WriteLine(A_new_item.Category + "," + A_new_item.Name + "," + A_new_item.Price);
-                    writer.Close(); 
+                    bool found = Productlist.Exists(item => item.Name == NewProduct);
+                    Console.WriteLine(found);
+                    //If product is not in the productlist already it is added:
+                    if (!found)
+                    {
+                        Productlist.Add(A_new_item);
 
-                     
+                        // A logfile is created were we log the userdata:
+                        StreamWriter writer = new StreamWriter(filepath, true);
+                        writer.WriteLine(A_new_item.Category + "," + A_new_item.Name + "," + A_new_item.Price);
+                        writer.Close();
+
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("The product was added to the productlist");
+                        Console.ResetColor();
+                        Console.WriteLine("------------------------------");
+                    } 
+                    else 
+                    { 
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"The product {NewProduct} is already in the list!");
+                        Console.ResetColor();
+                    }
                 }
             }
-            
+
             // Sort the productlist in order by price, lowest first
             List<Newitem> sortedList = Productlist.OrderBy(item => item.Price).ToList();
             List<Newitem> summaryList = new List<Newitem>();
-                   
+
             // When the customer is finished with adding products to the list the productlist is presented with the price:
             Console.WriteLine("------------------------------");
             Console.WriteLine("Category".PadRight(5) + " " + "Product".PadRight(5) + " " + "Price".PadRight(5));
@@ -99,14 +116,15 @@ namespace Vecka40MiniProjekt
                     summaryList.Add(anItem);
                     data = reader.ReadLine();
 
-                    
+
                 }
 
                 //Presentation of the complete product list:
                 List<Newitem> oldAndNewProductsSorted = summaryList.OrderBy(item => item.Price).ToList();
 
-                foreach (Newitem anItem in oldAndNewProductsSorted) { 
-                Console.WriteLine($"{anItem.Category.PadRight(5)} | {anItem.Name.PadRight(5)} | {anItem.Price.ToString().PadRight(5)}"); 
+                foreach (Newitem anItem in oldAndNewProductsSorted)
+                {
+                    Console.WriteLine($"{anItem.Category.PadRight(5)} | {anItem.Name.PadRight(5)} | {anItem.Price.ToString().PadRight(5)}");
                 }
                 int TotalCostOldAndNewProducts = oldAndNewProductsSorted.Sum(item => item.Price);
                 Console.WriteLine("The total cost of all your products (this session and previous sessions:");
