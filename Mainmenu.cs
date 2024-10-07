@@ -46,8 +46,8 @@ namespace Vecka40MiniProjekt
                     A_new_item.Category = NewCategory;
                     A_new_item.Name = NewProduct;
                     A_new_item.Price = Int32.Parse(thePrice);
-                    bool found = Productlist.Exists(item => item.Name == NewProduct);
-                    Console.WriteLine(found);
+                    bool found = Productlist.Any(product => product.Name.Equals(NewProduct, StringComparison.OrdinalIgnoreCase));
+
                     //If product is not in the productlist already it is added:
                     if (!found)
                     {
