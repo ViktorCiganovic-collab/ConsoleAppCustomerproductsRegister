@@ -36,7 +36,7 @@ namespace Vecka40MiniProjekt
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("The product was added to list");
+                    Console.WriteLine("The product was added to the productlist");
                     Console.ResetColor();
                     Console.WriteLine("------------------------------");
                
